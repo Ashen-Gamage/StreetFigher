@@ -1,9 +1,9 @@
 import os
-import pygame
 import sys
-
+import pygame
 from pygame import mixer
 from Fighter import Fighter
+from Cloud import CloudLayer, load_cloud_images
 
 mixer.init()
 pygame.init()
@@ -124,6 +124,18 @@ victory_image = pygame.image.load(
     resource_path("Assests/images/icons/victory.png")
 ).convert_alpha()
 
+# load cloud images (Clouds_gray / Shape2: cloud_shape2_1 to 2_5)
+cloud_paths = [
+    resource_path(f"Assests/images/Clouds/PNG/Clouds_gray/Shape2/cloud_shape2_{i}.png")
+    for i in range(1, 6)
+]
+cloud_layer = CloudLayer(
+    load_cloud_images(cloud_paths),
+    SCREEN_WIDTH,
+    count=6,
+    min_scale=1.6,
+    max_scale=2.8,
+)
 # find number of steps in each animation
 WARRIOR_ANIMATION_STEPS = [10, 8, 1, 7, 7, 3, 7]
 WIZARD_ANIMATION_STEPS = [8, 8, 2, 8, 8, 3, 7]
@@ -282,6 +294,8 @@ while run:
   else:
     # draw background
     draw_bg()
+    cloud_layer.update(SCREEN_WIDTH)
+    cloud_layer.draw(screen)
 
     # show player stats
     draw_health_bar(fighter_1.health, 20, 20)
